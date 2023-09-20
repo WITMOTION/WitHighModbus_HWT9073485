@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Wit.SDK.Device.Device.Device.DKey;
 using Wit.SDK.Modular.Sensor.Modular.DataProcessor.Constant;
 using Wit.SDK.Modular.WitSensorApi.Modular.HWT9073;
 
@@ -321,7 +322,7 @@ namespace Wit.Example_HWT9073_485
                 //HWT9073485.SendProtocolData(Modbus16Utils.GetRead(HWT9073485.GetModbusId(), 0x03, 0x01), waitTime);
                 //HWT9073485.SendProtocolData(new byte[] { 50, 03, 00, 03, 00, 01, 79, 8B }, waitTime);
 
-                string reg03Value = HWT9073485.GetDeviceData("03");
+                short? reg03Value = HWT9073485.GetDeviceData(new ShortKey("03"));
                 MessageBox.Show($"寄存器03值为 : {reg03Value}");
             }
             catch (Exception ex)

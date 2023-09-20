@@ -43,9 +43,11 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Wit.SDK, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DII\Wit.SDK.dll</HintPath>
+    <Reference Include="Windows">
+      <HintPath>_DII\Windows.winmd</HintPath>
+    </Reference>
+    <Reference Include="Wit.OpenSDK">
+      <HintPath>_DII\Wit.OpenSDK.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +57,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Hwt9073\Components\HWT9073485Processor.cs" />
+    <Compile Include="Hwt9073\Components\Modbus16Resolver.cs" />
+    <Compile Include="Hwt9073\Data\WitSensorKey.cs" />
+    <Compile Include="Hwt9073\HWT9073485.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -85,8 +91,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="DII\Wit.SDK.dll" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
