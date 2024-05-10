@@ -54,7 +54,7 @@ extern "C" {
 #define MAGFILT		0x2c
 #define POWONSEND	0x2d
 #define VERSION		0x2e
-#define CCBW			  0x2f
+#define CCBW			    0x2f
 #define YYMM				0x30
 #define DDHH				0x31
 #define MMSS				0x32
@@ -68,14 +68,22 @@ extern "C" {
 #define HX					0x3a
 #define HY					0x3b
 #define HZ					0x3c
-#define Roll				0x3d
-#define Pitch				0x3e
-#define Yaw					0x3f
-#define TEMP				0x40
-#define D0Status		0x41
-#define D1Status		0x42
-#define D2Status		0x43
-#define D3Status		0x44
+#define LRoll				0x3d
+#define HRoll				0x3e
+#define LPitch				0x3f
+#define HPitch				0x40
+#define LYaw				0x41
+#define HYaw				0x42
+#define TEMP				0x43
+
+// #define Roll				0x3d
+// #define Pitch				0x3e
+// #define Yaw					0x3f
+// #define TEMP				0x40
+// #define D0Status		0x41
+// #define D1Status		0x42
+// #define D2Status		0x43
+// #define D3Status		0x44
 #define PressureL		0x45
 #define PressureH		0x46
 #define HeightL			0x47

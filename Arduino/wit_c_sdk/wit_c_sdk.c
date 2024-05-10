@@ -87,47 +87,47 @@ int32_t WitSerialWriteRegister(SerialWrite Write_func)
     p_WitSerialWriteFunc = Write_func;
     return WIT_HAL_OK;
 }
-static void CopeWitData(uint8_t ucIndex, uint16_t *p_data, uint32_t uiLen)
-{
-    uint32_t uiReg1 = 0, uiReg2 = 0, uiReg1Len = 0, uiReg2Len = 0;
-    uint16_t *p_usReg1Val = p_data;
-    uint16_t *p_usReg2Val = p_data+3;
+// static void CopeWitData(uint8_t ucIndex, uint16_t *p_data, uint32_t uiLen)
+// {
+//     uint32_t uiReg1 = 0, uiReg2 = 0, uiReg1Len = 0, uiReg2Len = 0;
+//     uint16_t *p_usReg1Val = p_data;
+//     uint16_t *p_usReg2Val = p_data+3;
     
-    uiReg1Len = 4;
-    switch(ucIndex)
-    {
-        case WIT_ACC:   uiReg1 = AX;    uiReg1Len = 3;  uiReg2 = TEMP;  uiReg2Len = 1;  break;
-        case WIT_ANGLE: uiReg1 = Roll;  uiReg1Len = 3;  uiReg2 = VERSION;  uiReg2Len = 1;  break;
-        case WIT_TIME:  uiReg1 = YYMM;	break;
-        case WIT_GYRO:  uiReg1 = GX;  uiLen = 3;break;
-        case WIT_MAGNETIC: uiReg1 = HX;  uiLen = 3;break;
-        case WIT_DPORT: uiReg1 = D0Status;  break;
-        case WIT_PRESS: uiReg1 = PressureL;  break;
-        case WIT_GPS:   uiReg1 = LonL;  break;
-        case WIT_VELOCITY: uiReg1 = GPSHeight;  break;
-        case WIT_QUATER:    uiReg1 = q0;  break;
-        case WIT_GSA:   uiReg1 = SVNUM;  break;
-        case WIT_REGVALUE:  uiReg1 = s_uiReadRegIndex;  break;
-		default:
-			return ;
+//     uiReg1Len = 4;
+//     switch(ucIndex)
+//     {
+//         case WIT_ACC:   uiReg1 = AX;    uiReg1Len = 3;  uiReg2 = TEMP;  uiReg2Len = 1;  break;
+//         case WIT_ANGLE: uiReg1 = Roll;  uiReg1Len = 3;  uiReg2 = VERSION;  uiReg2Len = 1;  break;
+//         case WIT_TIME:  uiReg1 = YYMM;	break;
+//         case WIT_GYRO:  uiReg1 = GX;  break;
+//         case WIT_MAGNETIC: uiReg1 = HX;  break;
+//         case WIT_DPORT: uiReg1 = D0Status;  break;
+//         case WIT_PRESS: uiReg1 = PressureL;  break;
+//         case WIT_GPS:   uiReg1 = LonL;  break;
+//         case WIT_VELOCITY: uiReg1 = GPSHeight;  break;
+//         case WIT_QUATER:    uiReg1 = q0;  break;
+//         case WIT_GSA:   uiReg1 = SVNUM;  break;
+//         case WIT_REGVALUE:  uiReg1 = s_uiReadRegIndex;  break;
+// 		default:
+// 			return ;
 
-    }
-    if(uiLen == 3)
-    {
-        uiReg1Len = 3;
-        uiReg2Len = 0;
-    }
-    if(uiReg1Len)
-	{
-		memcpy(&sReg[uiReg1], p_usReg1Val, uiReg1Len<<1);
-		p_WitRegUpdateCbFunc(uiReg1, uiReg1Len);
-	}
-    if(uiReg2Len)
-	{
-		memcpy(&sReg[uiReg2], p_usReg2Val, uiReg2Len<<1);
-		p_WitRegUpdateCbFunc(uiReg2, uiReg2Len);
-	}
-}
+//     }
+//     if(uiLen == 3)
+//     {
+//         uiReg1Len = 3;
+//         uiReg2Len = 0;
+//     }
+//     if(uiReg1Len)
+// 	{
+// 		memcpy(&sReg[uiReg1], p_usReg1Val, uiReg1Len<<1);
+// 		p_WitRegUpdateCbFunc(uiReg1, uiReg1Len);
+// 	}
+//     if(uiReg2Len)
+// 	{
+// 		memcpy(&sReg[uiReg2], p_usReg2Val, uiReg2Len<<1);
+// 		p_WitRegUpdateCbFunc(uiReg2, uiReg2Len);
+// 	}
+// }
 
 void WitSerialDataIn(uint8_t ucData)
 {
@@ -138,30 +138,30 @@ void WitSerialDataIn(uint8_t ucData)
     s_ucWitDataBuff[s_uiWitDataCnt++] = ucData;
     switch(s_uiProtoclo)
     {
-        case WIT_PROTOCOL_NORMAL:
-            if(s_ucWitDataBuff[0] != 0x55)
-            {
-                s_uiWitDataCnt--;
-                memcpy(s_ucWitDataBuff, &s_ucWitDataBuff[1], s_uiWitDataCnt);
-                return ;
-            }
-            if(s_uiWitDataCnt >= 11)
-            {
-                ucSum = __CaliSum(s_ucWitDataBuff, 10);
-                if(ucSum != s_ucWitDataBuff[10])
-                {
-                    s_uiWitDataCnt--;
-                    memcpy(s_ucWitDataBuff, &s_ucWitDataBuff[1], s_uiWitDataCnt);
-                    return ;
-                }
-                usData[0] = ((uint16_t)s_ucWitDataBuff[3] << 8) | (uint16_t)s_ucWitDataBuff[2];
-                usData[1] = ((uint16_t)s_ucWitDataBuff[5] << 8) | (uint16_t)s_ucWitDataBuff[4];
-                usData[2] = ((uint16_t)s_ucWitDataBuff[7] << 8) | (uint16_t)s_ucWitDataBuff[6];
-                usData[3] = ((uint16_t)s_ucWitDataBuff[9] << 8) | (uint16_t)s_ucWitDataBuff[8];
-                CopeWitData(s_ucWitDataBuff[1], usData, 4);
-                s_uiWitDataCnt = 0;
-            }
-        break;
+        // case WIT_PROTOCOL_NORMAL:
+        //     if(s_ucWitDataBuff[0] != 0x55)
+        //     {
+        //         s_uiWitDataCnt--;
+        //         memcpy(s_ucWitDataBuff, &s_ucWitDataBuff[1], s_uiWitDataCnt);
+        //         return ;
+        //     }
+        //     if(s_uiWitDataCnt >= 11)
+        //     {
+        //         ucSum = __CaliSum(s_ucWitDataBuff, 10);
+        //         if(ucSum != s_ucWitDataBuff[10])
+        //         {
+        //             s_uiWitDataCnt--;
+        //             memcpy(s_ucWitDataBuff, &s_ucWitDataBuff[1], s_uiWitDataCnt);
+        //             return ;
+        //         }
+        //         usData[0] = ((uint16_t)s_ucWitDataBuff[3] << 8) | s_ucWitDataBuff[2];
+        //         usData[1] = ((uint16_t)s_ucWitDataBuff[5] << 8) | s_ucWitDataBuff[4];
+        //         usData[2] = ((uint16_t)s_ucWitDataBuff[7] << 8) | s_ucWitDataBuff[6];
+        //         usData[3] = ((uint16_t)s_ucWitDataBuff[9] << 8) | s_ucWitDataBuff[8];
+        //         CopeWitData(s_ucWitDataBuff[1], usData, 4);
+        //         s_uiWitDataCnt = 0;
+        //     }
+        // break;
         case WIT_PROTOCOL_MODBUS:
             if(s_uiWitDataCnt > 2)
             {
@@ -217,12 +217,12 @@ void WitCanDataIn(uint8_t ucData[8], uint8_t ucLen)
     if(ucLen < 8)return ;
     switch(s_uiProtoclo)
     {
-        case WIT_PROTOCOL_CAN:
-            if(ucData[0] != 0x55)return ;
-            usData[0] = ((uint16_t)ucData[3] << 8) | ucData[2];
-            usData[1] = ((uint16_t)ucData[5] << 8) | ucData[4];
-            usData[2] = ((uint16_t)ucData[7] << 8) | ucData[6];
-            CopeWitData(ucData[1], usData, 3);
+        // case WIT_PROTOCOL_CAN:
+        //     if(ucData[0] != 0x55)return ;
+        //     usData[0] = ((uint16_t)ucData[3] << 8) | ucData[2];
+        //     usData[1] = ((uint16_t)ucData[5] << 8) | ucData[4];
+        //     usData[2] = ((uint16_t)ucData[7] << 8) | ucData[6];
+        //     CopeWitData(ucData[1], usData, 3);
             break;
         case WIT_PROTOCOL_NORMAL:
         case WIT_PROTOCOL_MODBUS:
@@ -385,6 +385,18 @@ char CheckRange(short sTemp,short sMin,short sMax)
     else return 0;
 }
 /*Acceleration calibration demo*/
+int32_t WitCaliRefAngle(void)
+{
+/*
+	First place the equipment horizontally, and then perform the following operations
+*/
+	if(WitWriteReg(KEY, KEY_UNLOCK) != WIT_HAL_OK)	    return  WIT_HAL_ERROR;// unlock reg
+	if(s_uiProtoclo == WIT_PROTOCOL_MODBUS)	p_WitDelaymsFunc(20);
+	else if(s_uiProtoclo == WIT_PROTOCOL_NORMAL) p_WitDelaymsFunc(1);
+	else ;
+	if(WitWriteReg(CALSW, CALREFANGLE) != WIT_HAL_OK)	return  WIT_HAL_ERROR;
+	return WIT_HAL_OK;
+}
 int32_t WitStartAccCali(void)
 {
 /*
