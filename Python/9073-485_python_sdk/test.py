@@ -2,8 +2,9 @@ import device_model
 import time
 
 
+# 数据更新时会回调此方法 When updating data, this method will be called back
 def updateData(DeviceModel):
-    print(DeviceModel.deviceName + " : " + DeviceModel.deviceData)
+    print(DeviceModel.deviceData)
 
 
 if __name__ == "__main__":
@@ -19,5 +20,5 @@ if __name__ == "__main__":
     # 获得读取结果 Obtaining read results
     # device.get(str(0x3a))
 
-    # 写入寄存器 向0x65写入50 即修改检测周期为50hz Write a register to 0x65 and write 50 to modify the detection cycle to 50Hz
+    # 写入寄存器 向0x65写入50 Write a register to 0x65
     # device.writeReg(0x65, 50)
